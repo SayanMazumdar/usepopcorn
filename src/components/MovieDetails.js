@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Movie from './Movie';
 import Summary from './Summary';
+import useLocalStorage from '../useLocalStorage';
 
 export default function MovieDetails({ movieId, backBtn }) {
 
-  const [watchedMovies, setWatchedMovies] = useState([]);
+  const [watchedMovies, setWatchedMovies] = useLocalStorage('movies');
   const [movieRating, setMovieRating] = useState(null);
   const totalMovies = watchedMovies.length;
   const avgImdbRating = (watchedMovies.reduce((total, movie) => total + movie.imdbRating, 0)) / totalMovies;
@@ -18,8 +19,6 @@ export default function MovieDetails({ movieId, backBtn }) {
   function onMovieRemove(movieId) {
     setWatchedMovies((prev) => prev.filter((item) => item.imdbID !== movieId));
   }
-
-  console.log(watchedMovies)
 
   useEffect(() => {
     if (watchedMovies.length > 0 && movieId) {

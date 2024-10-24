@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 
 export default function Header({query, setQuery, totalMovies}) {
 
@@ -21,9 +21,27 @@ function Brand() {
 
 function Search({name, change}) {
 
+    const input = useRef();
+
+    useEffect(() => {
+        function handleEnter(e) {
+            if(document.activeElement === input.current) return;
+
+            if(e.code === 'Enter') {
+                input.current.focus();
+                change('');
+            }
+        }
+
+        document.addEventListener('keydown', handleEnter);
+        return function() {
+            document.removeEventListener('keydown', handleEnter);
+        }
+    }, [change])
+
     return (
         <div className='search'>
-            <input type="text" name="" id="" placeholder='Search movies...' value={name} onChange={(e) => change(e.target.value)}/>
+            <input ref={input} type="text" placeholder='Search movies...' value={name} onChange={(e) => change(e.target.value)}/>
         </div>
     )
 }
